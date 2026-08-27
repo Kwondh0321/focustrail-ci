@@ -1,6 +1,6 @@
 # FocusTrail CI
 
-한국어 | [English](README.en.md)
+한국어 | [English](README.en.md) | [변경 기록 / Changelog](CHANGELOG.md)
 
 FocusTrail CI는 정적 HTML에서 키보드 포커스 순서를 추출하고 위험한 패턴을 검사하며, 현재 결과를 저장된 기준선과 비교합니다. CLI와 GitHub Composite Action으로 사용할 수 있습니다.
 

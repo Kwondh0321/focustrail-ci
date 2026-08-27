@@ -1,6 +1,6 @@
 # FocusTrail CI
 
-[한국어](README.md) | English
+[한국어](README.md) | English | [Changelog / 변경 기록](CHANGELOG.md)
 
 FocusTrail CI extracts keyboard focus order from static HTML, reports risky patterns, and compares the current result with a reviewed baseline. It is available as a Node.js CLI and a GitHub composite action.
 
