@@ -1,0 +1,21 @@
+name: FocusTrail CI
+description: Audit static HTML keyboard focus order and optionally compare it with a baseline
+inputs:
+  html:
+    description: Path to an HTML file
+    required: true
+  baseline:
+    description: Optional path to a committed FocusTrail JSON baseline
+    required: false
+outputs:
+  report:
+    description: Path to the generated report
+    value: focustrail-current.json
+runs:
+  using: composite
+  steps:
+    - shell: bash
+      run: node "$GITHUB_ACTION_PATH/src/cli.mjs" scan "${{ inputs.html }}" --output focustrail-current.json
+    - if: inputs.baseline != ''
+      shell: bash
+      run: node "$GITHUB_ACTION_PATH/src/cli.mjs" compare "${{ inputs.baseline }}" focustrail-current.json
