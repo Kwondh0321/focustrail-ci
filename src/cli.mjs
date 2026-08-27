@@ -3,7 +3,7 @@ import { readFile, writeFile } from 'node:fs/promises';
 import { compareTrails, scanFile } from './core.mjs';
 
 function usage() {
-  console.error('Usage: focustrail scan <file.html> [--output path] [--format text|json]\n       focustrail compare <baseline.json> <current.json>');
+  console.error('사용법: focustrail scan <file.html> [--output 경로] [--format text|json]\n        focustrail compare <baseline.json> <current.json>');
 }
 
 function option(args, name, fallback = null) {
@@ -18,7 +18,7 @@ async function main(args) {
     const format = option(args, '--format', 'json');
     const output = option(args, '--output');
     const rendered = format === 'text'
-      ? [`FocusTrail: ${report.summary.focusableElements} focusable element(s), ${report.summary.findings} finding(s)`,
+      ? [`FocusTrail: 포커스 요소 ${report.summary.focusableElements}개, 발견 항목 ${report.summary.findings}개`,
         ...report.focusOrder.map((item, index) => `${index + 1}. ${item.locator} (tabindex=${item.tabIndex})`),
         ...report.findings.map((finding) => `[${finding.severity.toUpperCase()}] ${finding.ruleId} ${finding.locator}: ${finding.message}`)].join('\n')
       : JSON.stringify(report, null, 2);
@@ -38,7 +38,6 @@ async function main(args) {
 }
 
 process.exitCode = await main(process.argv.slice(2)).catch((error) => {
-  console.error(`focustrail: ${error.message}`);
+    console.error(`focustrail 오류: ${error.message}`);
   return 2;
 });
-

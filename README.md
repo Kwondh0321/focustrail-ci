@@ -1,8 +1,8 @@
 # FocusTrail CI
 
-FocusTrail extracts keyboard focus order from static HTML, reports risky focus patterns, and compares a current focus trail with a committed baseline. It runs locally, as a CLI, or as a composite GitHub Action.
+FocusTrail CI는 정적 HTML에서 키보드 포커스 순서를 추출하고 위험한 패턴을 검사하며, 현재 결과를 저장된 기준선과 비교합니다. CLI와 GitHub Composite Action으로 사용할 수 있습니다.
 
-## Run
+## 사용
 
 ```bash
 npm install
@@ -11,17 +11,13 @@ node src/cli.mjs scan examples/form.html --output focus.json
 node src/cli.mjs compare baseline.json focus.json
 ```
 
-## Rules
+## 검사 규칙
 
-- `FT001`: positive `tabindex` overrides natural order
-- `FT002`: a focusable control is hidden from the accessibility tree
-- `FT003`: `role="button"` is not keyboard focusable
-- `FT004`: duplicate IDs make focus targeting ambiguous
-- `FT005`: autofocus can move focus without user intent
-
-The static parser is intentionally fast and deterministic. It cannot observe controls created at runtime, shadow DOM, CSS visibility, focus traps, or actual browser behavior. Use it as an early CI guardrail and pair it with browser-based accessibility testing for production interfaces.
-
-## GitHub Action
+- `FT001`: 양수 `tabindex`가 자연스러운 순서를 변경함
+- `FT002`: 접근성 트리에서 숨긴 요소가 포커스를 받음
+- `FT003`: `role="button"` 요소가 키보드 포커스를 받지 못함
+- `FT004`: 중복 ID로 포커스 대상이 모호함
+- `FT005`: autofocus가 사용자 의도 없이 포커스를 이동할 수 있음
 
 ```yaml
 - uses: Kwondh0321/focustrail-ci@main
@@ -30,13 +26,15 @@ The static parser is intentionally fast and deterministic. It cannot observe con
     baseline: accessibility/focus-baseline.json
 ```
 
-## Development
+정적 분석은 런타임 DOM, Shadow DOM, CSS 가시성, 실제 포커스 트랩을 관찰하지 못하므로 브라우저 기반 접근성 테스트와 함께 사용해야 합니다.
+
+## 개발
 
 ```bash
 npm test
 npm run smoke
 ```
 
-## License
+## 라이선스
 
 MIT

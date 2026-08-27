@@ -1,15 +1,15 @@
 name: FocusTrail CI
-description: Audit static HTML keyboard focus order and optionally compare it with a baseline
+description: 정적 HTML의 키보드 포커스 순서를 검사하고 기준선과 비교합니다
 inputs:
   html:
-    description: Path to an HTML file
+    description: 검사할 HTML 파일 경로
     required: true
   baseline:
-    description: Optional path to a committed FocusTrail JSON baseline
+    description: 선택 사항인 FocusTrail JSON 기준선 경로
     required: false
 outputs:
   report:
-    description: Path to the generated report
+    description: 생성된 보고서 경로
     value: focustrail-current.json
 runs:
   using: composite

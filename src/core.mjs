@@ -48,7 +48,7 @@ export function analyzeHtml(html, source = 'document.html') {
         findings.push({
           ruleId: 'FT004',
           severity: 'high',
-          message: `Duplicate id "${attributes.id}" makes focus targeting ambiguous.`,
+          message: `중복 id "${attributes.id}" 때문에 포커스 대상을 명확히 식별할 수 없습니다.`,
           locator: `#${attributes.id}`,
         });
       }
@@ -59,7 +59,7 @@ export function analyzeHtml(html, source = 'document.html') {
         findings.push({
           ruleId: 'FT003',
           severity: 'medium',
-          message: 'An element with role="button" is not keyboard focusable.',
+          message: 'role="button" 요소가 키보드 포커스를 받을 수 없습니다.',
           locator: locator(tag, attributes, documentIndex),
         });
       }
@@ -80,7 +80,7 @@ export function analyzeHtml(html, source = 'document.html') {
       findings.push({
         ruleId: 'FT001',
         severity: 'high',
-        message: `Positive tabindex=${tabIndex} overrides natural document order.`,
+        message: `양수 tabindex=${tabIndex} 값이 문서의 자연스러운 포커스 순서를 변경합니다.`,
         locator: item.locator,
       });
     }
@@ -88,7 +88,7 @@ export function analyzeHtml(html, source = 'document.html') {
       findings.push({
         ruleId: 'FT002',
         severity: 'high',
-        message: 'A focusable element is hidden from the accessibility tree.',
+        message: '포커스를 받을 수 있는 요소가 접근성 트리에서 숨겨져 있습니다.',
         locator: item.locator,
       });
     }
@@ -96,7 +96,7 @@ export function analyzeHtml(html, source = 'document.html') {
       findings.push({
         ruleId: 'FT005',
         severity: 'medium',
-        message: 'Autofocus may move focus without user intent.',
+        message: 'autofocus가 사용자 의도 없이 포커스를 이동할 수 있습니다.',
         locator: item.locator,
       });
     }
@@ -136,4 +136,3 @@ export function compareTrails(baseline, current) {
     regressed: current.findings.length > baseline.findings.length,
   };
 }
-
