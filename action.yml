@@ -1,21 +1,28 @@
 name: FocusTrail CI
-description: 정적 HTML의 키보드 포커스 순서를 검사하고 기준선과 비교합니다
+description: 정적 HTML 키보드 포커스 순서를 검사합니다 / Audit static HTML keyboard focus order
+branding:
+  icon: navigation
+  color: blue
 inputs:
   html:
-    description: 검사할 HTML 파일 경로
+    description: 검사할 HTML 파일 경로 / HTML file to audit
     required: true
   baseline:
-    description: 선택 사항인 FocusTrail JSON 기준선 경로
+    description: FocusTrail JSON 기준선 경로(선택) / Optional baseline path
     required: false
 outputs:
   report:
-    description: 생성된 보고서 경로
+    description: 생성된 보고서 경로 / Generated report path
     value: focustrail-current.json
 runs:
   using: composite
   steps:
     - shell: bash
-      run: node "$GITHUB_ACTION_PATH/src/cli.mjs" scan "${{ inputs.html }}" --output focustrail-current.json
+      env:
+        INPUT_HTML: ${{ inputs.html }}
+      run: node "$GITHUB_ACTION_PATH/src/cli.mjs" scan "$INPUT_HTML" --output focustrail-current.json
     - if: inputs.baseline != ''
       shell: bash
-      run: node "$GITHUB_ACTION_PATH/src/cli.mjs" compare "${{ inputs.baseline }}" focustrail-current.json
+      env:
+        INPUT_BASELINE: ${{ inputs.baseline }}
+      run: node "$GITHUB_ACTION_PATH/src/cli.mjs" compare "$INPUT_BASELINE" focustrail-current.json

@@ -14,14 +14,14 @@ function parseAttributes(source = '') {
 }
 
 function isDisabled(attributes) {
-  return 'disabled' in attributes || attributes['aria-disabled'] === 'true';
+  return 'disabled' in attributes;
 }
 
 function isFocusable(tag, attributes) {
-  if (isDisabled(attributes) || attributes.hidden !== undefined || attributes.type === 'hidden') return false;
+  if (isDisabled(attributes) || attributes.hidden !== undefined || attributes.type?.toLowerCase() === 'hidden') return false;
   const tabindex = attributes.tabindex === undefined ? null : Number(attributes.tabindex);
   if (Number.isFinite(tabindex)) return tabindex >= 0;
-  if (tag === 'a' || tag === 'area') return Boolean(attributes.href);
+  if (tag === 'a' || tag === 'area') return 'href' in attributes;
   if (['button', 'input', 'select', 'textarea', 'summary', 'iframe'].includes(tag)) return true;
   if (tag === 'audio' || tag === 'video') return 'controls' in attributes;
   return attributes.contenteditable !== undefined && attributes.contenteditable !== 'false';
@@ -40,9 +40,20 @@ export function analyzeHtml(html, source = 'document.html') {
   const ids = new Map();
   let documentIndex = 0;
 
-  for (const match of html.matchAll(tagPattern)) {
+  const markup = html
+    .replace(/<!--[\s\S]*?-->/g, '')
+    .replace(/<(script|style|template)\b[\s\S]*?<\/\1>/gi, '');
+  for (const match of markup.matchAll(tagPattern)) {
     const tag = match[1].toLowerCase();
     const attributes = parseAttributes(match[2]);
+    if ('tabindex' in attributes && !/^[+-]?\d+$/.test(attributes.tabindex.trim())) {
+      findings.push({
+        ruleId: 'FT006',
+        severity: 'medium',
+        message: `tabindex 값 ${JSON.stringify(attributes.tabindex)}이(가) 유효한 정수가 아닙니다.`,
+        locator: locator(tag, attributes, documentIndex),
+      });
+    }
     if (attributes.id) {
       if (ids.has(attributes.id)) {
         findings.push({
@@ -55,7 +66,7 @@ export function analyzeHtml(html, source = 'document.html') {
       ids.set(attributes.id, true);
     }
     if (!isFocusable(tag, attributes)) {
-      if (attributes.role === 'button' && attributes.tabindex === undefined) {
+      if (attributes.role?.toLowerCase() === 'button' && attributes.tabindex === undefined) {
         findings.push({
           ruleId: 'FT003',
           severity: 'medium',
@@ -66,7 +77,8 @@ export function analyzeHtml(html, source = 'document.html') {
       continue;
     }
 
-    const tabIndex = attributes.tabindex === undefined ? 0 : Number(attributes.tabindex);
+    const parsedTabIndex = attributes.tabindex === undefined ? 0 : Number(attributes.tabindex);
+    const tabIndex = Number.isFinite(parsedTabIndex) ? parsedTabIndex : 0;
     const item = {
       locator: locator(tag, attributes, documentIndex),
       tag,
@@ -84,7 +96,7 @@ export function analyzeHtml(html, source = 'document.html') {
         locator: item.locator,
       });
     }
-    if (attributes['aria-hidden'] === 'true') {
+    if (attributes['aria-hidden']?.toLowerCase() === 'true') {
       findings.push({
         ruleId: 'FT002',
         severity: 'high',

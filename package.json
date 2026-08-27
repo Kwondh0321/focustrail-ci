@@ -2,11 +2,15 @@
   "name": "focustrail-ci",
   "version": "0.1.0",
   "description": "Audit and diff keyboard focus order in static HTML",
+  "author": "Kwondh0321",
   "type": "module",
+  "exports": "./src/core.mjs",
+  "files": ["src", "action.yml", "README.md", "README.en.md", "LICENSE"],
   "bin": {
     "focustrail": "src/cli.mjs"
   },
   "scripts": {
+    "check": "node --check src/cli.mjs && node --check src/core.mjs",
     "test": "node --test",
     "smoke": "node src/cli.mjs scan examples/form.html --format text"
   },
@@ -14,6 +18,8 @@
     "node": ">=20"
   },
   "keywords": ["accessibility", "keyboard", "focus", "ci", "wcag"],
-  "license": "MIT"
+  "license": "MIT",
+  "repository": { "type": "git", "url": "git+https://github.com/Kwondh0321/focustrail-ci.git" },
+  "bugs": { "url": "https://github.com/Kwondh0321/focustrail-ci/issues" },
+  "homepage": "https://github.com/Kwondh0321/focustrail-ci#readme"
 }
-

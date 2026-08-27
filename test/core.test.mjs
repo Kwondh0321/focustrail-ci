@@ -22,3 +22,15 @@ test('compares removed and reordered controls', () => {
   assert.equal(diff.reordered, false);
 });
 
+test('handles HTML focus semantics and ignores inert source text', () => {
+  const report = analyzeHtml(`
+    <!-- <button id="commented">No</button> -->
+    <script>const sample = '<button id="scripted">No</button>';</script>
+    <a id="empty-link" href="">Link</a>
+    <button id="aria-disabled" aria-disabled="true">Still focusable</button>
+    <input id="hidden" type="HIDDEN">
+    <div id="invalid" tabindex="nope">Bad tabindex</div>
+  `);
+  assert.deepEqual(report.focusOrder.map((item) => item.locator), ['#empty-link', '#aria-disabled']);
+  assert.ok(report.findings.some((finding) => finding.ruleId === 'FT006'));
+});
